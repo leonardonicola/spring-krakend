@@ -1,0 +1,35 @@
+{
+  "output_encoding": "json",
+  "name": "autenticas",
+  "port": 8000,
+  "endpoints": [
+    {
+      "endpoint": "/api/v1/auth/login",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/auth/login",
+          "encoding": "no-op",
+          "host": [
+            "http://auth-service:3000"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/auth/register",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/auth/register",
+          "host": [
+            "http://auth-service:3000"
+          ]
+        }
+      ]
+    }
+  ],
+  "version": 3
+}

@@ -1,0 +1,15 @@
+server:
+  shutdown: graceful
+  port: 3000
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET}
