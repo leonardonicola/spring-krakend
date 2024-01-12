@@ -1,4 +1,4 @@
-package com.popinjay.loginsys.models.dtos;
+package com.popinjay.loginsys.models.dtos.auth;
 
 import com.popinjay.loginsys.models.UserRole;
 import jakarta.validation.constraints.NotNull;

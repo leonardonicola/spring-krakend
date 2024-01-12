@@ -23,6 +23,7 @@ services:
       - '3000:3000'
     depends_on:
       - postgres
+    profiles: [ prod ]
     env_file:
       - .env
   krakend_ce:
@@ -31,6 +32,7 @@ services:
     image: devopsfaith/krakend:watch
     volumes:
       - ./krakend:/etc/krakend
+    profiles: [ prod ]
     ports:
       - "8000:8000"
     command: [ "run", "-d", "-c", "/etc/krakend/krakend.json" ]

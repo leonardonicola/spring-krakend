@@ -7,9 +7,10 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: create-drop
 api:
   security:
     token:
-      secret: ${JWT_SECRET}
+      secret: ${JWT_SECRET:9312938sz8casmd189238}

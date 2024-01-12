@@ -1,6 +1,6 @@
 package com.popinjay.loginsys.models;
 
-import com.popinjay.loginsys.models.dtos.RegisterDTO;
+import com.popinjay.loginsys.models.dtos.auth.RegisterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

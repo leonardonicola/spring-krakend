@@ -2,14 +2,14 @@ package com.popinjay.loginsys.services;
 
 import com.popinjay.loginsys.controller.errors.UsernameUniqueException;
 import com.popinjay.loginsys.models.User;
-import com.popinjay.loginsys.models.dtos.RegisterResponseDTO;
+import com.popinjay.loginsys.models.dtos.auth.RegisterResponseDTO;
+import com.popinjay.loginsys.models.dtos.user.UserByIdDTO;
 import com.popinjay.loginsys.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,11 +30,14 @@ public class UserService {
                                    createdUser.getRole(), createdUser.getId());
   }
 
-  public void deleteUser(UUID id) throws EntityNotFoundException {
-    userRepository.deleteById(id);
+  public UserByIdDTO getUserById(UUID id) throws EntityNotFoundException {
+    return userRepository.findById(id)
+                         .map(user -> new UserByIdDTO(user.getUsername(), user.getName(), user.getId(), user.getRole()))
+                         .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
   }
 
-  public List<User> getAll() {
-    return userRepository.findAll();
+  public void deleteUser(UUID id) throws EntityNotFoundException {
+    userRepository.deleteById(id);
   }
 }

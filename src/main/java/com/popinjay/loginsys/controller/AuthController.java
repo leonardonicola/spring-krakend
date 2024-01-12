@@ -3,15 +3,14 @@ package com.popinjay.loginsys.controller;
 
 import com.popinjay.loginsys.controller.errors.UsernameUniqueException;
 import com.popinjay.loginsys.models.User;
-import com.popinjay.loginsys.models.dtos.LoginDTO;
-import com.popinjay.loginsys.models.dtos.RegisterDTO;
-import com.popinjay.loginsys.models.dtos.RegisterResponseDTO;
+import com.popinjay.loginsys.models.dtos.auth.LoginDTO;
+import com.popinjay.loginsys.models.dtos.auth.RegisterDTO;
+import com.popinjay.loginsys.models.dtos.auth.RegisterResponseDTO;
 import com.popinjay.loginsys.services.TokenService;
 import com.popinjay.loginsys.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,9 +26,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
-  Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
   private final UserService userService;
   private final TokenService tokenService;
   private final AuthenticationManager authenticationManager;
@@ -39,7 +38,6 @@ public class AuthController {
     var usernamePassword = new UsernamePasswordAuthenticationToken(body.username(), body.password());
     var auth = authenticationManager.authenticate(usernamePassword);
     var token = tokenService.generateToken((User) auth.getPrincipal());
-    logger.info("Login was made with success! User:" + body.username());
     return ResponseEntity.status(HttpStatus.OK).body(Map.of("access_token", token));
   }
 
@@ -48,16 +46,14 @@ public class AuthController {
     String encryptedPassword = new BCryptPasswordEncoder().encode(body.password());
     User newUser = new User(body, encryptedPassword);
     try {
-      logger.info("User created with success! " + body.username());
       RegisterResponseDTO createdUser = this.userService.createUser(newUser);
       return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     } catch (UsernameUniqueException e) {
-      logger.warn("Username Unique Exception on User " + body.username());
       Map<String, String> errorMsg = Map.of("message", "Já existe um usuário com este username!");
       return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMsg);
     } catch (Exception e) {
-      logger.error("Error while creating user " + body.username());
-      throw new RuntimeException("Erro ao criar usuário!");
+      log.error("Erro ao criar usuario");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar usuário!");
     }
   }
 }
